@@ -1,338 +1,320 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Exchange</title>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <script src="{{ url_for('static',filename='JS/modernizr.custom.js') }}"></script>
-    <!-- 新 Bootstrap 核心 CSS 文件 -->
-    <link rel='stylesheet' href="{{ url_for('static',filename='CSS/bootstrap.min.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='CSS/jquery-ui.css') }}">
-    <link rel="stylesheet" href="{{ url_for('static',filename='CSS/carousel.css') }}">
-    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
-    <script src="{{ url_for('static',filename='JS/jquery.min.js') }}"></script>
-    <script src="{{ url_for('static',filename='JS/jquery-ui.js') }}"></script>
-    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
-    <script src="{{ url_for('static',filename='JS/bootstrap.min.js') }}"></script>
-     <!-- WARNING: Respond.js doesn't work if you view the page via file://  and the response.js is for @media -->
-    <!--[if lt IE 9]>
-        <script src="{{ url_for('static',filename='JS/respond.src.js') }}"></script>
-    <![endif]-->
-</head>
-<script>
-    $(function(){
-        if(!window.Modernizr.hashchange){
-            alert("请下载最新浏览器！");
-            window.location.href = "/outdate";
+{% extends 'header.html' %}
+{% block content %}
+    <script>
+        function doCheckAll(obj) {
+            $("input[id^='chk_pos_']").prop("checked", obj.checked);
+            doSelect();
         }
-        $(document).off('click.bs.dropdown.data-api');//可使导航栏的下拉框点击
-        //$("li.dropdown .dropdown-toggle span.caret").remove();
-        dropdownOpen();
-        //scrollChange();
-    });
-    function dropdownOpen() {
-        //鼠标悬停弹下拉菜单
-        var $dropdownLi = $('li.dropdown');
-        $dropdownLi.mouseover(function () {
-            $(this).addClass('open');
-        }).mouseout(function () {
-            $(this).removeClass('open');
+        $(function () {
+            $("#datepicker").datepicker({
+                dateFormat: 'yy-mm-dd'
+            });
         });
-    }
-    function scrollChange(){
-        $(window).scroll(function () {
-            if ($(window).scrollTop() > 0) {
-                $("#header_nav").removeClass("navbar-default-top").addClass("navbar-fixed-top");
+        function doNew() {
+            //init data
+            $("#new_currency").val($("#init_currency").val());
+            $("#new_type option[value='Call']").attr("selected", true);
+            $("#new_price").val("1.25");
+            var dateInit = new Date();
+            var theDay = dateInit.getDate() + 7;//默认7天后
+            var dayStr = theDay < 10 ? '0' + theDay : theDay;
+            var dayMonth = parseInt(dateInit.getMonth()) + 1 < 10 ? '0' + (parseInt(dateInit.getMonth()) + 1) : (parseInt(dateInit.getMonth()) + 1);
+            var days = dateInit.getFullYear() + "-" + dayMonth + "-" + dayStr;
+            $("#datepicker").val(days);
+            $("#new_money").val("100000");
+            $("#new_sell").val("270.42 USD");
+            $("#new_buy").val("270.42 USD");
+            $("td[name='td_chk_sell']").removeClass("has-success");
+            $("td[name='td_chk_buy']").removeClass("has-success");
+            $("#id_chk_buy").prop("checked", false);
+            $("#id_chk_sell").prop("checked", false);
+            $("#btn_deal").prop("disabled",true);
+            //init end
+            $("#position_new").show();
+            $("#position_list").hide();
+        }
+        function doCancel() {
+            $("#position_list").show();
+            $("#position_new").hide();
+        }
+        function selectSell(obj){
+            $("td[name='td_chk_sell']").removeClass("has-success");
+            $("td[name='td_chk_buy']").removeClass("has-success");
+            $("#id_chk_buy").prop("checked", false);
+            $("#btn_deal").attr("disabled",true);
+            if (obj.checked)
+            {
+                $("td[name='td_chk_sell']").addClass("has-success");
             }
             else
             {
-                $("#header_nav").removeClass("navbar-fixed-top").addClass("navbar-default-top");
+                $("td[name='td_chk_sell']").removeClass("has-success");
             }
-        });
-    }
-</script>
-<body>
-<div class="navbar-wrapper">
-    <div class="container">
-        <nav id="header_nav" class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-            <div class="container">
-                <div class="navbar-header">
-                    <button class="navbar-toggle collapsed" aria-expanded="false" aria-controls="navbar" type="button"
-                            data-toggle="collapse" data-target="#navbar">
-                        <span class="sr-only">Toggle navigation</span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
-                        <span class="icon-bar"></span>
+        }
+        function selectBuy(obj){
+            $("td[name='td_chk_sell']").removeClass("has-success");
+            $("td[name='td_chk_buy']").removeClass("has-success");
+            $("#id_chk_sell").prop("checked", false);
+            $("#btn_deal").attr("disabled",true);
+            if (obj.checked)
+            {
+                $("td[name='td_chk_buy']").addClass("has-success");
+                $("#btn_deal").attr("disabled",false);
+            }
+            else
+            {
+                $("td[name='td_chk_buy']").removeClass("has-success");
+            }
+        }
+        function doSelect(){
+            $("#btn_close").attr("disabled", true);
+            var selectNum = $("input[name='chk_pos']:checked").length;
+            if (selectNum > 0){
+                $("#btn_close").attr("disabled", false);
+            }
+        }
+        function doDeal(){
+            var currency = $("#new_currency").val();
+            var types = $("#new_type").val();
+            var price = $("#new_price").val();
+            var dates = $("#datepicker").val();
+            var money = $("#new_money").val();
+            var num = $("input[name='chk_pos']").length;
+            var max = 1;
+            if (num == 0) {
+                max = 1
+            } else {
+                max = num + 1
+            }
+            var str = "<tr>"
+                    + "<td><input type=\"checkbox\" id=\"chk_pos_"+max+"\" name=\"chk_pos\" onclick=\"doSelect()\"/></td>"
+                    + "<td>"+currency+"</td>"
+                    + "<td>"+types+"</td>"
+                    + "<td>"+price+"</td>"
+                    + "<td>"+money+"</td>"
+                    + "<td>"+dates+"</td>"
+                    + "<td>-397.00 USD</td>"
+                    + "<td>119.15 USD</td>"
+                    + "<td>-277.85 USD</td>"
+                    + "<td></td>"
+                    + "</tr>";
+            $("#tbl_list").append(str);
+            $("#position_list").show();
+            $("#position_new").hide();
+        }
+        function doClose(){
+            $("input[name='chk_pos']:checked").parent().parent().remove();
+            $("#btn_close").prop("disabled", true);
+        }
+        function chg_curr(obj){
+            $("#init_currency").val(obj.value);
+        }
+        function chg_init(obj){
+            $("#new_currency").val(obj.value);
+        }
+    </script>
+    <div class='container' style="width: 100%">
+        <div class="row">
+            <div class="col-sm-3 col-md-2 sidebar">
+                <ul class="nav nav-sidebar">
+                    <li class="active"><a href="/option">期权交易</a></li>
+                    <li><a href="/currency">货币对</a></li>
+                    <li><a href="/commodity">商品</a></li>
+                    <li><a href="/exponent">指数</a></li>
+                </ul>
+            </div>
+            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <h2 class="page-header">期权交易</h2>
+                <div>
+                    <table class="table table-noborder">
+                        <tr>
+                            <th>货币对</th>
+                            <th>买</th>
+                            <th>卖</th>
+                        </tr>
+                        <tr>
+                            <td>
+                                <select class="form-control" id="init_currency" onchange="chg_init(this)">
+                                    <option value="EUR/USD">EUR/USD</option>
+                                    <option value="USD/JPY">USD/JPY</option>
+                                    <option value="AUD/USD">AUD/USD</option>
+                                    <option value="USD/CHF">USD/CHF</option>
+                                </select>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" readonly value="1.24719" style="cursor: auto;"/>
+                            </td>
+                            <td>
+                                <input type="text" class="form-control" readonly value="1.24749" style="cursor: auto;"/>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+                <div>
+                    <button type="button" class="btn btn-primary" style="margin-left: 8px" onclick="doNew()">添加头寸
                     </button>
-                    <a class="navbar-brand" href="#">多米投资</a>
                 </div>
-                <div class="navbar-collapse collapse" id="navbar">
-                    <ul class="nav navbar-nav">
-                        <li class="active"><a href="#">首页</a></li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">DUOMI</a>
-                            <ul class="dropdown-menu" id="myul" role="menu">
-                                <li><a href="#">DUOMI介绍</a></li>
-                                <li><a href="#">什么是交易所</a></li>
-                                <li><a href="#">DUOMI优势</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">产品信息</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">DUOMI点差</a></li>
-                                <li><a href="#">隔夜利息</a></li>
-                                <li><a href="#">资金安全</a></li>
-                                <li><a href="#">资金存取</a></li>
-                                <li><a href="#">开户流程</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">软件操作</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">网页交易</a></li>
-                                <li><a href="#">MT4交易</a></li>
-                                <li><a href="#">手机交易</a></li>
-                                <li><a href="#">操作说明</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">技术指导</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">市场新闻</a></li>
-                                <li><a href="#">交易策略</a></li>
-                                <li><a href="#">技术分析</a></li>
-                            </ul>
-                        </li>
-                        <li class="dropdown">
-                            <a class="dropdown-toggle" aria-expanded="false" href="#" data-toggle="dropdown">关于多米</a>
-                            <ul class="dropdown-menu" role="menu">
-                                <li><a href="#">多米投资</a></li>
-                                <li><a href="#">机构合作</a></li>
-                                <li><a href="#">联系我们</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                    <ul class="nav navbar-nav navbar-right">
-                        <li><a>欢迎, {{ session['username'] }}</a></li>
-                        <li><a href="/logout">登出</a></li>
-                    </ul>
+                <p></p>
+
+                <div id="position_list">
+                    <div>
+                        <table class="table table-noborder" id="tbl_list">
+                            <tr>
+                                <th><input type="checkbox" id="chk_all" onclick="doCheckAll(this)"></th>
+                                <th colspan="4">货币对</th>
+                                <th>到期日</th>
+                                <th>开仓权利金</th>
+                                <th>当前权利金</th>
+                                <th>盈利/亏损</th>
+                                <th>保证金</th>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <input type="checkbox" id="chk_pos_1" name="chk_pos" onclick="doSelect()"/>
+                                </td>
+                                <td>
+                                    EUR/USD
+                                </td>
+                                <td>
+                                    Call
+                                </td>
+                                <td>
+                                    1.26
+                                </td>
+                                <td>
+                                    100,000.00
+                                </td>
+                                <td>
+                                    2014-11-24
+                                </td>
+                                <td>
+                                    -397.00 USD
+                                </td>
+                                <td>
+                                    119.15 USD
+                                </td>
+                                <td>
+                                    -277.85 USD
+                                </td>
+                                <td>
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="navbar-right">
+                            <button type="button" id="btn_close" disabled class="btn btn-primary btn-lg btn-success"
+                                    style="margin-top: 20px" onclick="doClose()">关闭已选头寸
+                            </button>
+                        </div>
+                        <div class="navbar-right div_border">
+                            <table class="table table-noborder" style="margin-bottom: 0px;">
+                                <tr>
+                                    <th>
+                                        <span id="totalAction">支付:</span>
+                                    </th>
+                                    <td>
+                                    </td>
+                                    <td align="right" id="total1">116.19 USD</td>
+                                </tr>
+                                <tr>
+                                    <th>
+                                        盈利/亏损:
+                                    </th>
+                                    <td>
+                                    </td>
+                                    <td align="right" id="total2">-280.81 USD
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div id="position_new" class="new-div-border" style="display: none;">
+                    <div>
+                        <table class="table table-noborder">
+                            <tr>
+                                <th class="text-center">货币对</th>
+                                <th class="text-center">类型</th>
+                                <th class="text-center">履约执行价格</th>
+                                <th class="text-center">到期日</th>
+                                <th class="text-center">金额</th>
+                                <th class="text-center"></th>
+                                <th class="text-center">卖</th>
+                                <th class="text-center"></th>
+                                <th class="text-center">买</th>
+                                <th class="text-center"></th>
+                            </tr>
+                            <tr>
+                                <td width="15%">
+                                    <select class="form-control" id="new_currency" onchange="chg_curr(this)">
+                                        <option value="EUR/USD">EUR/USD</option>
+                                        <option value="USD/JPY">USD/JPY</option>
+                                        <option value="AUD/USD">AUD/USD</option>
+                                        <option value="USD/CHF">USD/CHF</option>
+                                    </select>
+                                </td>
+                                <td width="10%">
+                                    <select class="form-control" id="new_type">
+                                        <option value="Call">Call</option>
+                                        <option value="Put">Put</option>
+                                    </select>
+                                </td>
+                                <td width="12%">
+                                    <input type="text" class="form-control" value="1.25%" id="new_price">
+                                    <div class="text-center" id="new_strike">strike 1.25584</div>
+                                </td>
+                                <td width="12%">
+                                    <input type="text" id="datepicker" class="form-control" readonly style="cursor: pointer">
+                                    <div class="text-center" id="new_during">7days</div>
+                                </td>
+                                <td width="12%">
+                                    <input type="text" class="form-control" value="100,000" id="new_money">
+                                </td>
+                                <td width="5%">
+                                    <span class="glyphicon glyphicon-arrow-right" style="font-size: 25px"></span>
+                                </td>
+                                <td width="15%" name="td_chk_sell">
+                                    <input type="text" value="270.42 USD" class="form-control" id="new_sell">
+                                </td>
+                                <td width="2%" align="left" name="td_chk_sell">
+                                    <input type="checkbox" class="my-checkbox" id="id_chk_sell" onclick="selectSell(this)">
+                                </td>
+                                <td width="15%" name="td_chk_buy">
+                                    <input type="text" value="270.42 USD" class="form-control" id="new_buy">
+                                </td>
+                                <td width="2%" align="left" name="td_chk_buy">
+                                    <input type="checkbox" class="my-checkbox" id="id_chk_buy" onclick="selectBuy(this)">
+                                </td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div>
+                        <div class="btn-group">
+                            <button type="button" onclick="doCancel()" style="margin-left: 8px"
+                                    class="btn btn-default btn-lg">取消
+                            </button>
+                        </div>
+                        <div class="navbar-right">
+                            <button type="button" id="btn_deal" class="btn btn-primary btn-lg btn-success"
+                                    style="margin-top: 2px" onclick="doDeal()" disabled>进行交易
+                            </button>
+                        </div>
+                        <div class="navbar-right div_border">
+                            <table class="table table-noborder" style="margin-bottom: 0px;">
+                                <tr>
+                                    <th>
+                                        <span id="newAction">支付:</span>
+                                    </th>
+                                    <td>
+                                    </td>
+                                    <td align="right" id="new_total">116.19 USD</td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </nav>
-
-    </div>
-</div>
-
-
-<!-- Carousel
-================================================== -->
-<div class="carousel slide" id="myCarousel" data-ride="carousel">
-    <!-- Indicators -->
-    <ol class="carousel-indicators">
-        <li class="active" data-target="#myCarousel" data-slide-to="0"></li>
-        {#
-        <li data-target="#myCarousel" data-slide-to="1"></li>
-        #}
-        {#
-        <li data-target="#myCarousel" data-slide-to="2"></li>
-        #}
-    </ol>
-    <div class="carousel-inner" role="listbox">
-        <div class="item active">
-            <a href="#none"><img alt="First slide" src="{{ url_for('static',filename='img/body_pic3.png') }}"></a>
-
-            <div class="container">
-                <div class="carousel-caption" style="top:40%">
-                    <h1>唯一的外汇交易所.</h1>
-
-                    <p>所有订单撮合成交，平均执行速度低于4毫秒</p>
-
-                    <p><a class="btn btn-lg btn-primary" role="button" href="#">Sign up today</a></p>
-                </div>
-            </div>
-        </div>
-        {#
-        <div class="item">#}
-            {# <img alt="Second slide" src="{{ url_for('static',filename='img/body_pic.jpg') }}">#}
-            {#
-            <div class="container">#}
-                {#
-                <div class="carousel-caption">#}
-                    {# <h1>Another example headline.</h1>#}
-                    {# <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta
-                        gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>#}
-                    {# <p><a class="btn btn-lg btn-primary" role="button" href="#">Learn more</a></p>#}
-                    {#
-                </div>
-                #}
-                {#
-            </div>
-            #}
-            {#
-        </div>
-        #}
-        {#
-        <div class="item">#}
-            {# <img alt="Third slide" src="{{ url_for('static',filename='img/body_pic1.jpg') }}">{#data:image/gif;base64,R0lGODlhAQABAIAAAFVVVQAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==#}
-            {#
-            <div class="container">#}
-                {#
-                <div class="carousel-caption">#}
-                    {# <h1>One more for good measure.</h1>#}
-                    {# <p>Cras justo odio, dapibus ac facilisis in, egestas eget quam. Donec id elit non mi porta
-                        gravida at eget metus. Nullam id dolor id nibh ultricies vehicula ut id elit.</p>#}
-                    {# <p><a class="btn btn-lg btn-primary" role="button" href="#">Browse gallery</a></p>#}
-                    {#
-                </div>
-                #}
-                {#
-            </div>
-            #}
-            {#
-        </div>
-        #}
-    </div>
-    <a class="left carousel-control" role="button" href="#myCarousel" data-slide="prev">
-        <span class="glyphicon glyphicon-chevron-left"></span>
-        <span class="sr-only">Previous</span>
-    </a>
-    <a class="right carousel-control" role="button" href="#myCarousel" data-slide="next">
-        <span class="glyphicon glyphicon-chevron-right"></span>
-        <span class="sr-only">Next</span>
-    </a>
-</div>
-<!-- /.carousel -->
-
-
-<!-- Marketing messaging and featurettes
-================================================== -->
-<!-- Wrap the rest of the page in another container to center all the content. -->
-
-<div class="container">
-
-    <!-- Three columns of text below the carousel -->
-    <div class="row">
-        <div class="col-lg-2" style="text-align: center;">
-            <!--<img class="img-circle" style="width: 140px; height: 140px;" alt="Generic placeholder image"
-                 src="data:image/gif;base64,R0lGODlhAQABAIAAAHd3dwAAACH5BAAAAAAALAAAAAABAAEAAAICRAEAOw==">-->
-
-            <h2>交易所</h2>
-
-            <p>多米投资是DUOMI交易所一级代理商</p>
-
-            <p><a class="btn btn-primary btn-sm" role="button" href="#">View details »</a></p>
-        </div>
-        <!-- /.col-lg-4 -->
-        <div class="col-lg-2" style="text-align: center;">
-
-            <h2>MT4交易</h2>
-
-            <p>MT4是简洁方便的第三方交易软件</p>
-
-            <p><a class="btn btn-primary btn-sm" role="button" href="#">View details »</a></p>
-        </div>
-        <!-- /.col-lg-4 -->
-        <div class="col-lg-2" style="text-align: center;">
-
-            <h2>网页交易</h2>
-
-            <p>DUOMI交易所也同时能支持在线Web交易</p>
-
-            <p><a class="btn btn-primary btn-sm" role="button" href="#">View details »</a></p>
-        </div>
-
-
-        <div class="col-lg-2" style="text-align: center;">
-
-            <h2>资金安全</h2>
-
-            <p>DUOMI开户客户受英国政府基金保护</p>
-
-            <p><a class="btn btn-primary btn-sm" role="button" href="#">View details »</a></p>
-        </div>
-        <div class="col-lg-2" style="text-align: center;">
-
-            <h2>我们的优势</h2>
-
-            <p>真实点差散户与机构权力一样</p>
-
-            <p><a class="btn btn-primary btn-sm" role="button" href="#">View details »</a></p>
-        </div>
-        <div class="col-lg-2" style="text-align: center;">
-
-            <h2>合作伙伴</h2>
-
-            <p>我们愿与各代理商共同开拓市场</p>
-
-            <p><a class="btn btn-primary btn-sm" role="button" href="#">View details »</a></p>
         </div>
     </div>
-    <!-- /.row -->
-
-
-    <!-- START THE FEATURETTES -->
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">第一个标题. <span
-                    class="text-muted">取决于你.</span></h2>
-
-            <p class="lead">这里可以添加描述.</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive" alt="500x500"
-                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MDAgNTAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIG1lZXQiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZGVmcyAvPjxyZWN0IGZpbGw9IiNlZWVlZWUiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiAvPjxnPjx0ZXh0IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7IGZvbnQtc2l6ZTogMjNwdDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGRvbWluYW50LWJhc2VsaW5lOiBjZW50cmFsOyBmaWxsOiAjYWFhYWFhOyIgeD0iMTkwLjMyNSIgeT0iMjUwIj41MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4="
-                 data-src="holder.js/500x500/auto" data-holder-rendered="true">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive" alt="500x500"
-                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MDAgNTAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIG1lZXQiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZGVmcyAvPjxyZWN0IGZpbGw9IiNlZWVlZWUiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiAvPjxnPjx0ZXh0IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7IGZvbnQtc2l6ZTogMjNwdDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGRvbWluYW50LWJhc2VsaW5lOiBjZW50cmFsOyBmaWxsOiAjYWFhYWFhOyIgeD0iMTkwLjMyNSIgeT0iMjUwIj41MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4="
-                 data-src="holder.js/500x500/auto" data-holder-rendered="true">
-        </div>
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Heading.<span class="text-muted"></span>
-            </h2>
-
-            <p class="lead">Content..</p>
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <div class="row featurette">
-        <div class="col-md-7">
-            <h2 class="featurette-heading">Heading.<span class="text-muted"></span></h2>
-
-            <p class="lead">Content..</p>
-        </div>
-        <div class="col-md-5">
-            <img class="featurette-image img-responsive" alt="500x500"
-                 src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCA1MDAgNTAwIiBwcmVzZXJ2ZUFzcGVjdFJhdGlvPSJub25lIG1lZXQiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIj48ZGVmcyAvPjxyZWN0IGZpbGw9IiNlZWVlZWUiIHdpZHRoPSI1MDAiIGhlaWdodD0iNTAwIiAvPjxnPjx0ZXh0IHN0eWxlPSJmb250LWZhbWlseTogQXJpYWwsIEhlbHZldGljYSwgT3BlbiBTYW5zLCBzYW5zLXNlcmlmLCBtb25vc3BhY2U7IGZvbnQtc2l6ZTogMjNwdDsgZm9udC13ZWlnaHQ6IGJvbGQ7IGRvbWluYW50LWJhc2VsaW5lOiBjZW50cmFsOyBmaWxsOiAjYWFhYWFhOyIgeD0iMTkwLjMyNSIgeT0iMjUwIj41MDB4NTAwPC90ZXh0PjwvZz48L3N2Zz4="
-                 data-src="holder.js/500x500/auto" data-holder-rendered="true">
-        </div>
-    </div>
-
-    <hr class="featurette-divider">
-
-    <!-- /END THE FEATURETTES -->
-
-
-    <!-- FOOTER -->
-    <footer>
-        <p class="pull-right"><a href="#">Back to top</a></p>
-
-        <p>© 2014 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
-    </footer>
-
-</div>
-<!-- /.container -->
-</body>
-</html>
+{% endblock %}
