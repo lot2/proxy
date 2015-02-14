@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head></head>
+<body>
+    {% if 'username' in session %}
+        sessions :
+    <p>
+        username: {{ session['username'] }}
+    <br/>
+    {% else %}
+        No session.
+    {% endif %}
+    <p>
+    <a href="/index">返回主页</a>
+</body>
+</html>

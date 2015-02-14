@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>用户登录</title>
+    <meta charset="UTF-8">
+    <!-- 新 Bootstrap 核心 CSS 文件 -->
+    <link rel='stylesheet' href="{{ url_for('static',filename='CSS/bootstrap.min.css') }}">
+    <link rel='stylesheet' href="{{ url_for('static',filename='CSS/signin.css') }}">
+    <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
+    <script src="{{ url_for('static',filename='JS/jquery.min.js') }}"></script>
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script src="{{ url_for('static',filename='JS/bootstrap.min.js') }}"></script>
+</head>
+<body>
+<div class="container">
+
+      <form class="form-signin" action="/login" role="form" method="post">
+        <h2 class="form-signin-heading">Please Sign in</h2>
+        <input class="form-control" autofocus required  name="username" id="id_username" type="text" placeholder="UserName">
+        <input class="form-control" required type="password" placeholder="Password" name="password" id="id_password">
+        <div class="checkbox">
+          <label>
+            <input type="checkbox" value="remember-me"> Remember me
+          </label>
+        </div>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <button class="btn btn-lg btn-primary btn-block" type="button">Register</button>
+      </form>
+
+    </div>
+</body>
+</html>
