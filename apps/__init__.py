@@ -4,7 +4,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-from apps import index
+from apps import index, database, sql, normal, proxy, user
 
 
 
