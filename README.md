@@ -1,2 +1,2 @@
-DuoMi exchange options.
-外汇期权.
+Proxy Configuration.
+代理配置
