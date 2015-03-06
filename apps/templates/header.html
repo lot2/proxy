@@ -18,6 +18,7 @@
     <!--[if lt IE 9]>
         <script src='{{ url_for('static',filename='JS/respond.src.js') }}'></script>
     <![endif]-->
+    <script src='{{ url_for('static',filename='JS/input-limit.js') }}'></script>
 </head>
 <style>
     body {
@@ -51,6 +52,10 @@
         box-shadow: 0 0 10px 5px rgba(0,0,0,.2);
         border: 1px solid #ccc
     }
+    .div-scrollable {
+      max-height: 290px;
+      overflow-y: scroll;
+    }
 </style>
 <script>
     $(function(){
@@ -61,6 +66,7 @@
         $(document).off('click.bs.dropdown.data-api');//可使导航栏的下拉框点击
         //$("li.dropdown .dropdown-toggle span.caret").remove();
         dropdownOpen();
+        $(".onlyNum").onlyNum();
     });
     $(function(){
           $('.btn-toggle').click(function(){
@@ -149,7 +155,7 @@
             </ul>
         </li>
         <li class="dropdown {% if title == 'About' %}active{% endif %}">
-          <a href="/about" class="dropdown-toggle" data-toggle="dropdown">关于我们</a>
+          <a href="javascript:void(0);" class="dropdown-toggle" data-toggle="dropdown">关于我们</a>
         </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">

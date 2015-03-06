@@ -14,7 +14,192 @@
                 </ul>
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+                <div class="row">
+                  <div class="col-md-6">
+                      <button type="button" class="btn btn-primary">Create</button>
+                      <p></p>
+                      <div class="panel panel-default div-scrollable" style="min-width: 330px;">
+                          <table id="user_table" class="table table-bordered table-hover" style="cursor: pointer;">
+                              <thead>
+                                  <tr style="background-color: lightgrey;">
+                                      <th>Name</th><th>IP</th><th>可用端口范围</th><th>Enable</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td>防火墙1</td><td>192.168.1.1</td><td>8000-8080</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙2</td><td>192.168.1.2</td><td>8000-8080</td><td>False<input type="hidden" value="0"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙1</td><td>192.168.1.1</td><td>8000-8080</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙1</td><td>192.168.1.1</td><td>8000-8080</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙2</td><td>192.168.1.2</td><td>8000-8080</td><td>False<input type="hidden" value="0"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙1</td><td>192.168.1.1</td><td>8000-8080</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙1</td><td>192.168.1.1</td><td>8000-8080</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙2</td><td>192.168.1.2</td><td>8000-8080</td><td>False<input type="hidden" value="0"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>防火墙1</td><td>192.168.1.1</td><td>8000-8080</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
+                      <div class="panel panel-default">
+                          <div class="panel-heading">Comments</div>
+                          <div class="panel-body">
+                            Information content
+                          </div>
+                      </div>
+                  </div>
+                  <div class="col-md-6">
+                      <div class="panel panel-default">
+                      <div class="panel-heading">Proxy Server Configuration</div>
+                              <div class="panel-body">
+                                  <form class="form-horizontal" style="max-width: 400px;">
+                                      <div class="form-group">
+                                        <label for="inputHostName" class="col-sm-4 control-label" >宿主机名称</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" id="inputHostName" placeholder="Host Name">
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                          <label for="inputProxyCount" class="col-sm-4 control-label">宿主机IP</label>
+                                          <div class="col-sm-8">
+                                                  <div class='input-group' style="width: 100%;">
+                                                      <input class='form-control onlyNum' name='ip1' type='text' style="width: 25%"
+                                                                                 size=3 maxlength=3 onkeydown=keyDownEvent(this)
+                                                                                 onkeyup=keyUpEvent(document.all("ip1"),document.all("ip1"),document.all("ip2")) />
+                                                      <input class='form-control onlyNum' name='ip2' type='text' style="width: 25%"
+                                                                                 size=3 maxlength=3 onkeydown=keyDownEvent(this)
+                                                                                 onkeyup=keyUpEvent(document.all("ip1"),document.all("ip2"),document.all("ip3")) />
+                                                      <input class='form-control onlyNum' name='ip3' type='text' style="width: 25%"
+                                                                                 size=3 maxlength=3 onkeydown=keyDownEvent(this)
+                                                                                 onkeyup=keyUpEvent(document.all("ip2"),document.all("ip3"),document.all("ip4")) />
+                                                      <input class='form-control onlyNum' name='ip4' type='text' style="width: 25%"
+                                                                                 size=3 maxlength=3 onkeydown=keyDownEvent(this)
+                                                                                 onkeyup=keyUpEventForIp4(document.all("ip3"),document.all("ip4")) />
+                                                  </div>
+                                          </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="inputMaxConnect" class="col-sm-4 control-label">宿主机管理端口</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" id="inputHostName" placeholder="">
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="inputMaxConnect" class="col-sm-4 control-label">可用端口范围</label>
+                                        <div class="col-sm-8">
+                                          <div class='input-group' style="width: 100%;">
+                                              <input class='form-control onlyNum' name='range1' type='text' style="width: 50%" size=5 maxlength=5 />
+                                              <input class='form-control onlyNum' name='range2' type='text' style="width: 50%" size=5 maxlength=5 />
+                                          </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="inputEnable" class="col-sm-4 control-label">Enable</label>
+                                        <div class="col-sm-8">
+                                            <div class="btn-group btn-toggle">
+                                                <button type="button" name="inputEnable" class="btn btn-sm btn-primary active" value="1">ON</button>
+                                                <button type="button" name="inputEnable" class="btn btn-sm btn-default" value="0">OFF</button>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <div align="right" style="padding-right: 15px;">
+                                          <button type="button" class="btn btn-primary">Save</button>
+                                          <button type="button" class="btn btn-primary">Delete</button>
+                                          <button type="button" class="btn btn-danger">Start</button>
+                                          <button type="button" class="btn btn-danger">Stop</button>
+                                        </div>
+                                      </div>
+                                  </form>
+                              </div>
+                      </div>
+                  </div>
+               </div>
             </div>
         </div>
+        <script>
+            function getPos(obj) {
+                obj.focus();
+                var workRange = document.selection.createRange();
+                obj.select();
+                var allRange = document.selection.createRange();
+                workRange.setEndPoint("StartToStart", allRange);
+                var len = workRange.text.length;
+                workRange.collapse(false);
+                workRange.select();
+                return len;
+            }
+            function setCursor(obj, num) {
+                range = obj.createTextRange();
+                range.collapse(true);
+                range.moveStart('character', num);
+                range.select();
+            }
+            function keyDownEvent(obj) {
+                code = event.keyCode;
+                if (!((code >= 48 && code <= 57) || (code >= 96 && code <= 105) || code == 190 || code == 110 || code == 13 || code == 9 || code == 39 || code == 8 || code == 46 || code == 99 || code == 37))
+                    event.returnValue = false;
+                if (code == 13)
+                    event.keyCode = 9;
+                if (code == 110 || code == 190)
+                    if (obj.value)
+                        event.keyCode = 9;
+                    else
+                        event.returnValue = false;
+            }
+            function keyUpEvent(obj0, obj1, obj2) {
+                if (obj1.value > 255) {
+                    alert("填写范围必须在 0 - 255间");
+                    obj1.value = obj1.value.substring(0, obj1.value.length - 1);
+                    return;
+                }
+                code = event.keyCode
+                if (obj1.value.length >= 3 && code != 37 && code != 39 && code != 16 && code != 9 && code != 13)
+                    obj2.focus();
+                if (code == 32)
+                    obj2.focus();
+                if (code == 8 && obj1.value.length == 0) {
+                    obj0.focus();
+                    setCursor(obj0, obj0.value.length);
+                }
+                if (code == 37 && (getPos(obj1) == 0)) {
+                    obj0.focus();
+                    setCursor(obj0, obj0.value.length);
+                }
+                if (code == 39 && (getPos(obj1) == obj1.value.length)) {
+                    obj2.focus();
+                }
+            }
+            function keyUpEventForIp4(obj0, obj) {
+                if (obj.value > 255) {
+                    alert("填写范围必须在 0 - 255间");
+                    obj.value = obj.value.substring(0, obj.value.length - 1);
+                    return;
+                }
+                if (code == 8 && obj.value.length == 0) {
+                    obj0.focus();
+                    setCursor(obj0, obj0.value.length);
+                }
+                if (code == 37 && (getPos(obj) == 0)) {
+                    obj0.focus();
+                    setCursor(obj0, obj0.value.length);
+                }
+            }
+        </script>
     </div>
 {% endblock %}

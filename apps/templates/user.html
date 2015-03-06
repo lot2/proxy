@@ -16,82 +16,93 @@
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                <div class="row">
                   <div class="col-md-6">
-                      <table id="user_table" class="table table-bordered table-hover" style="cursor: pointer;">
-                          <tr style="background-color: lightgrey;">
-                              <th>Email</th><th>Proxy Count</th><th>Max Connection</th><th>Enable</th>
-                          </tr>
-                          <tr>
-                              <td>aaa@aaa.com</td><td>1</td><td>20</td><td>True<input type="hidden" value="1"/></td>
-                          </tr>
-                          <tr>
-                              <td>bbb@bbb.com</td><td>2</td><td>100</td><td>False<input type="hidden" value="0"/></td>
-                          </tr>
-                      </table>
+                      <div class="panel panel-default div-scrollable" style="min-width: 330px;">
+                          <table id="user_table" class="table table-bordered table-hover" style="cursor: pointer;">
+                              <thead>
+                                  <tr style="background-color: lightgrey;">
+                                      <th>Email</th><th>Proxy Count</th><th>Max Connection</th><th>Enable</th>
+                                  </tr>
+                              </thead>
+                              <tbody>
+                                  <tr>
+                                      <td>aaa@aaa.com</td><td>1</td><td>20</td><td>True<input type="hidden" value="1"/></td>
+                                  </tr>
+                                  <tr>
+                                      <td>bbb@bbb.com</td><td>2</td><td>100</td><td>False<input type="hidden" value="0"/></td>
+                                  </tr>
+                              </tbody>
+                          </table>
+                      </div>
                   </div>
                   <div class="col-md-6">
-                      <div class="user_center">
-                      <form class="form-horizontal" style="max-width: 400px;">
-                          <h4 class='page-header'>User Management Modify</h4>
-                          <div class="form-group">
-                            <label for="inputEmail" class="col-sm-4 control-label" >Email</label>
-                            <div class="col-sm-8">
-                              <input type="text" class="form-control" id="inputEmail" placeholder="Email" readonly>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="inputProxyCount" class="col-sm-4 control-label">Proxy Count</label>
-                            <div class="col-sm-8">
-                                <div class="input-group">
-                                  <input type="text" class="form-control" id="inputProxyCount" value="1">
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <span class="glyphicon glyphicon-minus"  style="font-size: 12px"></span>
-                                    </button>
-                                    <button class="btn btn-default" type="button">
-                                        <span class="glyphicon glyphicon-plus"  style="font-size: 12px"></span>
-                                    </button>
-                                  </span>
-                                </div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="inputMaxConnect" class="col-sm-4 control-label">Max Connect</label>
-                            <div class="col-sm-8">
-                              <div class="input-group">
-                                  <input type="text" class="form-control" id="inputMaxConnect" value="1">
-                                  <span class="input-group-btn">
-                                    <button class="btn btn-default" type="button">
-                                        <span class="glyphicon glyphicon-minus" style="font-size: 12px"></span>
-                                    </button>
-                                    <button class="btn btn-default" type="button">
-                                        <span class="glyphicon glyphicon-plus"  style="font-size: 12px"></span>
-                                    </button>
-                                  </span>
-                                </div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label for="inputEnable" class="col-sm-4 control-label">Enable</label>
-                            <div class="col-sm-8">
-                                <div class="btn-group btn-toggle">
-                                    <button type="button" name="inputEnable" class="btn btn-sm btn-primary active" value="1">ON</button>
-                                    <button type="button" name="inputEnable" class="btn btn-sm btn-default" value="0">OFF</button>
-                                </div>
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <div class="col-sm-offset-4 col-sm-8" align="right">
-                              <button type="button" class="btn btn-primary">Save</button>
-                              <button type="button" class="btn btn-default">Delete</button>
-                            </div>
-                          </div>
-                        </form>
+                      <div class="panel panel-default">
+                          <div class="panel-heading">User Management Modify</div>
+                              <div class="panel-body">
+                                  <form class="form-horizontal" style="max-width: 400px;">
+                                      {#<h4 class='page-header'>User Management Modify</h4>#}
+                                      <div class="form-group">
+                                        <label for="inputEmail" class="col-sm-4 control-label" >Email</label>
+                                        <div class="col-sm-8">
+                                          <input type="text" class="form-control" id="inputEmail" placeholder="Email" readonly>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="inputProxyCount" class="col-sm-4 control-label">Proxy Count</label>
+                                        <div class="col-sm-8">
+                                            <div class="input-group">
+                                              <input type="text" class="form-control onlyNum" id="inputProxyCount" value="1">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" id="inputProxyCount_minus" onclick="doProxyCount_minus()">
+                                                    <span class="glyphicon glyphicon-minus"  style="font-size: 12px"></span>
+                                                </button>
+                                                <button class="btn btn-default" type="button" id="inputProxyCount_plus" onclick="doProxyCount_plus()">
+                                                    <span class="glyphicon glyphicon-plus"  style="font-size: 12px"></span>
+                                                </button>
+                                              </span>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="inputMaxConnect" class="col-sm-4 control-label">Max Connect</label>
+                                        <div class="col-sm-8">
+                                          <div class="input-group">
+                                              <input type="text" class="form-control onlyNum" id="inputMaxConnect" value="1">
+                                              <span class="input-group-btn">
+                                                <button class="btn btn-default" type="button" id="inputMaxConnect_minus" onclick="doMaxConnect_minus()">
+                                                    <span class="glyphicon glyphicon-minus" style="font-size: 12px"></span>
+                                                </button>
+                                                <button class="btn btn-default" type="button" id="inputMaxConnect_plus" onclick="doMaxConnect_plus()">
+                                                    <span class="glyphicon glyphicon-plus"  style="font-size: 12px"></span>
+                                                </button>
+                                              </span>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <label for="inputEnable" class="col-sm-4 control-label">Enable</label>
+                                        <div class="col-sm-8">
+                                            <div class="btn-group btn-toggle">
+                                                <button type="button" name="inputEnable" class="btn btn-sm btn-primary active" value="1">ON</button>
+                                                <button type="button" name="inputEnable" class="btn btn-sm btn-default" value="0">OFF</button>
+                                            </div>
+                                        </div>
+                                      </div>
+                                      <div class="form-group">
+                                        <div class="col-sm-offset-4 col-sm-8" align="right">
+                                          <button type="button" class="btn btn-primary">Save</button>
+                                          <button type="button" class="btn btn-primary">Delete</button>
+                                        </div>
+                                      </div>
+                                    </form>
+                              </div>
                         </div>
                   </div>
                </div>
             </div>
               <script>
-                  $("#user_table tr").click(function(){
+                  $("#user_table tbody tr").click(function(){
+                      $(this).parent().children().css("background",'#FFFFFF');
+                      $(this).css("background",'#f5f5f5');
                       var email = $(this).find('td:eq(0)').text();
                       var proxy_count = $(this).find('td:eq(1)').text();
                       var max_connect = $(this).find('td:eq(2)').text();
@@ -109,8 +120,35 @@
                           $("[name='inputEnable'][value='0']").addClass('active').addClass('btn-primary');
                           $("[name='inputEnable'][value='1']").addClass('btn-default');
                       }
-
                   });
+                  function doMaxConnect_minus(){
+                      if ($.trim($("#inputMaxConnect").val())==""){
+                          $("#inputMaxConnect").val("0");
+                      }
+                      if (parseInt($("#inputMaxConnect").val()) > 1){
+                        $("#inputMaxConnect").val((parseInt($("#inputMaxConnect").val())-1));
+                      }
+                  }
+                  function doMaxConnect_plus(){
+                      if ($.trim($("#inputMaxConnect").val())==""){
+                          $("#inputMaxConnect").val("0");
+                      }
+                      $("#inputMaxConnect").val((parseInt($("#inputMaxConnect").val())+1));
+                  }
+                  function doProxyCount_minus(){
+                      if ($.trim($("#inputProxyCount").val())==""){
+                          $("#inputProxyCount").val("0");
+                      }
+                      if (parseInt($("#inputProxyCount").val()) > 1) {
+                          $("#inputProxyCount").val((parseInt($("#inputProxyCount").val()) - 1));
+                      }
+                  }
+                  function doProxyCount_plus(){
+                      if ($.trim($("#inputProxyCount").val())==""){
+                          $("#inputProxyCount").val("0");
+                      }
+                      $("#inputProxyCount").val((parseInt($("#inputProxyCount").val())+1));
+                  }
               </script>
         </div>
     </div>
