@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Exchange</title>
+    <title>Proxy</title>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <script src='{{ url_for('static',filename='JS/modernizr.custom.js') }}'></script>
@@ -9,6 +9,9 @@
     <link rel='stylesheet' href='{{ url_for('static',filename='CSS/bootstrap.min.css') }}'>
     <link rel='stylesheet' href='{{ url_for('static',filename='CSS/dashboard.css') }}'>
     <link rel="stylesheet" href="{{ url_for('static',filename='CSS/jquery-ui.css') }}">
+
+    <script src='{{ url_for('static',filename='JS/RGraph.common.core.js') }}'></script>
+    <script src="{{ url_for('static',filename='JS/RGraph.line.js') }}"></script>
     <!-- jQuery文件。务必在bootstrap.min.js 之前引入 -->
     <script src='{{ url_for('static',filename='JS/jquery.min.js') }}'></script>
     <script src="{{ url_for('static',filename='JS/jquery-ui.js') }}"></script>

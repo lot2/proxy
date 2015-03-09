@@ -128,6 +128,20 @@
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <!--<h2 class="page-header">Dashboard</h2>-->
+                <canvas id="cvs" width="330" height="250">[No canvas support]</canvas>
+
+                <script>
+                    $(document).ready(function ()
+                    {
+                        var line = new RGraph.Line({
+                            id: 'cvs',
+                            data: [50,40,100,60,1800,90,20],
+                            options: {
+                                labels: ['2','4','6','8','10','12','14']
+                            }
+                        }).draw()
+                    })
+                </script>
 
             </div>
         </div>
