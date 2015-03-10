@@ -28,7 +28,7 @@
             $("td[name='td_chk_buy']").removeClass("has-success");
             $("#id_chk_buy").prop("checked", false);
             $("#id_chk_sell").prop("checked", false);
-            $("#btn_deal").prop("disabled",true);
+            $("#btn_deal").prop("disabled", true);
             //init end
             $("#position_new").show();
             $("#position_list").hide();
@@ -37,43 +37,39 @@
             $("#position_list").show();
             $("#position_new").hide();
         }
-        function selectSell(obj){
+        function selectSell(obj) {
             $("td[name='td_chk_sell']").removeClass("has-success");
             $("td[name='td_chk_buy']").removeClass("has-success");
             $("#id_chk_buy").prop("checked", false);
-            $("#btn_deal").attr("disabled",true);
-            if (obj.checked)
-            {
+            $("#btn_deal").attr("disabled", true);
+            if (obj.checked) {
                 $("td[name='td_chk_sell']").addClass("has-success");
             }
-            else
-            {
+            else {
                 $("td[name='td_chk_sell']").removeClass("has-success");
             }
         }
-        function selectBuy(obj){
+        function selectBuy(obj) {
             $("td[name='td_chk_sell']").removeClass("has-success");
             $("td[name='td_chk_buy']").removeClass("has-success");
             $("#id_chk_sell").prop("checked", false);
-            $("#btn_deal").attr("disabled",true);
-            if (obj.checked)
-            {
+            $("#btn_deal").attr("disabled", true);
+            if (obj.checked) {
                 $("td[name='td_chk_buy']").addClass("has-success");
-                $("#btn_deal").attr("disabled",false);
+                $("#btn_deal").attr("disabled", false);
             }
-            else
-            {
+            else {
                 $("td[name='td_chk_buy']").removeClass("has-success");
             }
         }
-        function doSelect(){
+        function doSelect() {
             $("#btn_close").attr("disabled", true);
             var selectNum = $("input[name='chk_pos']:checked").length;
-            if (selectNum > 0){
+            if (selectNum > 0) {
                 $("#btn_close").attr("disabled", false);
             }
         }
-        function doDeal(){
+        function doDeal() {
             var currency = $("#new_currency").val();
             var types = $("#new_type").val();
             var price = $("#new_price").val();
@@ -87,12 +83,12 @@
                 max = num + 1
             }
             var str = "<tr>"
-                    + "<td><input type=\"checkbox\" id=\"chk_pos_"+max+"\" name=\"chk_pos\" onclick=\"doSelect()\"/></td>"
-                    + "<td>"+currency+"</td>"
-                    + "<td>"+types+"</td>"
-                    + "<td>"+price+"</td>"
-                    + "<td>"+money+"</td>"
-                    + "<td>"+dates+"</td>"
+                    + "<td><input type=\"checkbox\" id=\"chk_pos_" + max + "\" name=\"chk_pos\" onclick=\"doSelect()\"/></td>"
+                    + "<td>" + currency + "</td>"
+                    + "<td>" + types + "</td>"
+                    + "<td>" + price + "</td>"
+                    + "<td>" + money + "</td>"
+                    + "<td>" + dates + "</td>"
                     + "<td>-397.00 USD</td>"
                     + "<td>119.15 USD</td>"
                     + "<td>-277.85 USD</td>"
@@ -102,16 +98,43 @@
             $("#position_list").show();
             $("#position_new").hide();
         }
-        function doClose(){
+        function doClose() {
             $("input[name='chk_pos']:checked").parent().parent().remove();
             $("#btn_close").prop("disabled", true);
         }
-        function chg_curr(obj){
+        function chg_curr(obj) {
             $("#init_currency").val(obj.value);
         }
-        function chg_init(obj){
+        function chg_init(obj) {
             $("#new_currency").val(obj.value);
         }
+        $(function () {
+            var line = new RGraph.Line({
+                id: 'cvs1',
+                data: [500, 400, 1000, 6000, 1800, 10000, 20000],
+                options: {
+                    labels: ['-12', '-10', '-8', '-6', '-4', '-2', '0s']
+                }
+            });
+            line.Set('chart.gutter.left', 50);
+            line.draw();
+            var bar = new RGraph.Bar({
+                id: 'cvs2',
+                data: [[42],[20],[50],[12],[205]],
+                options: {
+                    labels: {
+                        self: ['登录失败','SQL注入','SQL错误','SQL拒绝执行','非法IP'],
+                        above: true
+                    },
+                    colors: ['#428bca'],
+                    bevel: !RGraph.ISOLD,
+                    grouping: 'stacked',
+                    strokestyle: 'rgba(0,0,0,0)'
+                }
+            });
+            bar.Set('chart.labels.above.size',1);
+            bar.draw();
+        });
     </script>
     <div class='container' style="width: 100%">
         <div class="row">
@@ -120,7 +143,7 @@
                     <li class="active"><a href="/index">Dashboard</a></li>
                     <li><a href="/database">Database Proxy</a></li>
                     <li><a href="/sql">SQL Log</a></li>
-                    <li><a href="JavaScript:void(0);"  onclick="doToggleAdmin(this)">System</a></li>
+                    <li><a href="JavaScript:void(0);" onclick="doToggleAdmin(this)">System</a></li>
                     <li name="admin_detail"><a href="/normal">&nbsp;&nbsp;&nbsp;&nbsp;Normal Config</a></li>
                     <li name="admin_detail"><a href="/proxy">&nbsp;&nbsp;&nbsp;&nbsp;Proxy Server Config</a></li>
                     <li name="admin_detail"><a href="/user">&nbsp;&nbsp;&nbsp;&nbsp;User Management</a></li>
@@ -128,21 +151,24 @@
             </div>
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
                 <!--<h2 class="page-header">Dashboard</h2>-->
-                <canvas id="cvs" width="330" height="250">[No canvas support]</canvas>
-
-                <script>
-                    $(document).ready(function ()
-                    {
-                        var line = new RGraph.Line({
-                            id: 'cvs',
-                            data: [50,40,100,60,1800,90,20],
-                            options: {
-                                labels: ['2','4','6','8','10','12','14']
-                            }
-                        }).draw()
-                    })
-                </script>
-
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="panel panel-default">
+                            <div class="panel-heading">在线连接数</div>
+                            <div class="panel-body">
+                                <canvas id="cvs1" width="300" height="200">[No canvas support]</canvas>
+                            </div>
+                        </div>
+                        <div class="panel panel-default">
+                            <div class="panel-heading">攻击类型分析</div>
+                            <div class="panel-body">
+                                <canvas id="cvs2" width="300" height="200">[No canvas support]</canvas>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-8">
+                    </div>
+                </div>
             </div>
         </div>
     </div>
